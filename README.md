@@ -52,27 +52,29 @@ venv\Scripts\activate     # Windows
 
 # Instalacja zależności
 pip install -r requirements.txt
+```
 
 
 ### 2. Konfiguracja bazy i mediów
-
+```bash
 chmod +x manage.sh
 ./manage.sh migrate
 ./manage.sh createsuperuser
+```
 
 ### 3. Budowanie i uruchomienie 
-
+```bash
 docker compose up --build
 
 Aplikacja dostępna pod adresem http://0.0.0.0:8000/login
-
+```
 ### 4. Jakość Kodu i Testy
-
+```bash
 docker-compose up -d 
 docker-compose exec backend ruff check .
-
+```
 ### 5. Testy Automatyczne
-
+```bash
 docker-compose up -d 
 docker-compose exec backend python manage.py test
-
+```
