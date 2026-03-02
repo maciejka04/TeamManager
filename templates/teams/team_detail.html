@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block content %}
+    <nav style="margin-bottom: 20px;"><a href="{% url 'team_list' %}">← Powrót do listy zespołów</a></nav>
+
+    <div style="background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
+        <h2 style="margin-top: 0;">Zespół: {{ team.name }}</h2>
+        <p style="color: #666;">Właściciel: <strong>{{ team.owner.username }}</strong></p>
+    </div>
+
+    <div style="display: flex; gap: 40px; margin-top: 30px;">
+        <div style="flex: 2;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h3 style="margin: 0;">Projekty tego zespołu</h3>
+                <a href="{% url 'project_create' team.id %}" style="background: #28a745; color: white; padding: 8px 16px; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 0.9em;">+ Nowy Projekt</a>
+            </div>
+
+            <div style="display: grid; gap: 15px;">
+                {% for project in team.projects.all %}
+                    <div style="background: #fff; border: 1px solid #ddd; padding: 20px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <span style="font-size: 1.2em; font-weight: bold; color: #2c3e50;">📁 {{ project.name }}</span>
+                            <div style="font-size: 0.8em; color: #888; margin-top: 5px;">Zadania: {{ project.tasks.count }}</div>
+                        </div>
+                        
+                        <a href="{% url 'project_detail' project.id %}" style="background: #007bff; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; font-weight: bold;">
+                            Otwórz Tablicę Kanban →
+                        </a>
+                    </div>
+                {% empty %}
+                    <div style="text-align: center; padding: 40px; background: #f9f9f9; border: 2px dashed #ddd; border-radius: 8px; color: #888;">
+                        Brak projektów. Stwórz pierwszy projekt, aby zacząć pracę.
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div style="flex: 1;">
+            <div style="background: #f0f4f8; padding: 20px; border-radius: 10px; border: 1px solid #d1d9e0;">
+                <h4 style="margin-top: 0;">Członkowie zespołu</h4>
+                <ul style="list-style: none; padding: 0; margin-bottom: 20px;">
+                    {% for member in team.members.all %}
+                        <li style="padding: 5px 0; border-bottom: 1px solid #e0e0e0; font-size: 0.9em;">
+                            👤 {{ member.username }} {% if member == team.owner %}<small>(Właściciel)</small>{% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+
+                {% if team.owner == user %}
+                    <hr>
+                    <h4 style="margin-top: 20px; font-size: 0.9em;">Dodaj nowego członka</h4>
+                    <form action="{% url 'add_team_member' team.id %}" method="POST">
+                        {% csrf_token %}
+                        <input type="text" name="username" placeholder="Wpisz login..." required style="width: 100%; padding: 10px; margin-bottom: 10px; border-radius: 5px; border: 1px solid #ccc; box-sizing: border-box;">
+                        <button type="submit" style="width: 100%; background: #17a2b8; color: white; border: none; padding: 10px; cursor: pointer; border-radius: 5px; font-weight: bold;">Dodaj do zespołu</button>
+                    </form>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

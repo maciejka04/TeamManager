@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block content %}
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h2>Moje Zespoły</h2>
+        <a href="{% url 'team_create' %}" style="background: #28a745; color: white; padding: 10px 15px; text-decoration: none; border-radius: 5px;">+ Stwórz zespół</a>
+    </div>
+    <hr>
+    
+    <div style="display: grid; gap: 20px;">
+        {% for team in teams %}
+            <div style="border: 1px solid #ddd; padding: 20px; border-radius: 10px; background: #f9f9f9;">
+                <div style="display: flex; justify-content: space-between;">
+                    <h3>{{ team.name }}</h3>
+                    <span style="font-size: 0.8em; color: #666;">Właściciel: {{ team.owner.username }}</span>
+                </div>
+                
+                <p>Członkowie: 
+                    {% for member in team.members.all %}
+                        <span style="background: #e1e1e1; padding: 2px 8px; border-radius: 10px; font-size: 0.9em;">{{ member.username }}</span>
+                    {% endfor %}
+                </p>
+
+                <div style="margin-top: 15px;">
+                    <a href="{% url 'team_detail' team.id %}" style="color: #007bff; text-decoration: none; font-weight: bold;">Zobacz szczegóły i projekty →</a>
+                </div>
+            </div>
+        {% empty %}
+            <p>Nie należysz jeszcze do żadnego zespołu.</p>
+        {% endfor %}
+    </div>
+{% endblock %}

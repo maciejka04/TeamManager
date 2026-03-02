@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+    <h2>Dodaj nowe zadanie</h2>
+    <div style="max-width: 600px; background: #f8f9fa; padding: 25px; border-radius: 10px; border: 1px solid #ddd;">
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <hr>
+            <button type="submit" style="background: #28a745; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">Utwórz zadanie</button>
+            <a href="{% url 'team_list' %}" style="margin-left: 10px; color: #666;">Anuluj</a>
+        </form>
+    </div>
+{% endblock %}

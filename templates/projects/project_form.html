@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block content %}
+    <h2>Tworzenie nowego projektu</h2>
+    <p>Projekt zostanie przypisany do zespołu.</p>
+    <form method="POST" style="background: #f9f9f9; padding: 20px; border-radius: 8px; border: 1px solid #ddd;">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" style="background: #28a745; color: white; border: none; padding: 10px 20px; cursor: pointer; border-radius: 4px;">Zapisz projekt</button>
+        <a href="{% url 'team_list' %}" style="margin-left: 10px; color: #666;">Anuluj</a>
+    </form>
+{% endblock %}

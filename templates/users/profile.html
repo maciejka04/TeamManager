@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block content %}
+  <h2>Twój Profil</h2>
+  <div class="content-section">
+    <div class="media">
+      {% if user.profile.avatar %}
+        <img src="{{ user.profile.avatar.url }}" style="width: 150px; height: 150px; border-radius: 50%;">
+      {% endif %}
+      <div class="media-body">
+        <h2 class="account-heading">{{ user.username }}</h2>
+        <p class="text-secondary">{{ user.email }}</p>
+      </div>
+    </div>
+    
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <fieldset class="form-group">
+            <legend class="border-bottom mb-4">Informacje o profilu</legend>
+            {{ u_form.as_p }}
+            {{ p_form.as_p }}
+        </fieldset>
+        <button type="submit">Zaktualizuj</button>
+    </form>
+  </div>
+{% endblock content %}

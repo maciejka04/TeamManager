@@ -1,0 +1,14 @@
+asgiref
+Django
+psycopg2-binary
+sqlparse
+tzdata
+whitenoise
+environs
+djangorestframework
+Pillow
+djangorestframework-simplejwt
+drf-spectacular
+ruff
+django-extensions
+Werkzeug

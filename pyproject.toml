@@ -1,0 +1,22 @@
+[tool.ruff]
+# tech1: konfiguracja ruff 
+
+target-version = "py311"
+line-length = 120
+
+# Ignorujemy foldery, które nie czystym kodem
+exclude = [
+    "migrations",
+    "media",
+    "venv",
+    "__pycache__",
+]
+
+[tool.ruff.lint]
+# E, F - błędy i styl, I - sortowanie importów
+select = ["E", "F", "I"]
+# Ignorujemy E501 (długość linii)
+ignore = ["E501"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["apps"]

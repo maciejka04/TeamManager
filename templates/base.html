@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Team Manager{% endblock %}</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; margin: 0; padding: 0; background-color: #f4f7f6; }
+        nav { background: #2c3e50; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        nav a { color: white; text-decoration: none; margin-right: 15px; font-weight: 500; }
+        nav a:hover { color: #3498db; }
+        .nav-right { display: flex; align-items: center; gap: 15px; }
+        .container { max-width: 1200px; margin: 20px auto; padding: 20px; }
+        button.logout-btn { background: none; border: none; color: white; cursor: pointer; font-family: inherit; font-size: 1em; font-weight: 500; padding: 0; }
+        button.logout-btn:hover { color: #e74c3c; }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-left">
+            <a href="{% url 'dashboard' %}">🏠 Strona główna</a>
+            {% if user.is_authenticated %}
+                <a href="{% url 'team_list' %}">👥 Zespoły</a>
+            {% endif %}
+        </div>
+        
+        <div class="nav-right">
+            {% if user.is_authenticated %}
+                <a href="{% url 'profile' %}">👤 Profil ({{ user.username }})</a>
+                <form action="{% url 'logout' %}" method="post" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="logout-btn">Wyloguj</button>
+                </form>
+            {% else %}
+                <a href="{% url 'login' %}">Zaloguj się</a>
+                <a href="{% url 'register' %}" style="background: #3498db; padding: 5px 15px; border-radius: 5px;">Zarejestruj</a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <div class="container">
+        {% if messages %}
+            {% for message in messages %}
+                <div style="padding: 10px; margin-bottom: 20px; border-radius: 5px; background: {% if message.tags == 'success' %}#d4edda{% else %}#f8d7da{% endif %};">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>

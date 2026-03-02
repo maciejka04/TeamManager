@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+
+{% block content %}
+    {% if user.is_authenticated %}
+        <div style="margin-bottom: 30px; display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <h1 style="margin: 0; color: #2c3e50;">Pulpit sterowniczy 👋</h1>
+                <p style="color: #7f8c8d; margin: 5px 0 0 0;">Witaj z powrotem, <strong>{{ user.username }}</strong>. Sprawdź swoje postępy.</p>
+            </div>
+        </div>
+
+        <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 30px;">
+            
+            <div style="background: white; border: 1px solid #e1e4e8; padding: 20px; border-radius: 12px; display: flex; align-items: center; gap: 25px; min-width: 350px; flex: 1.5; box-shadow: 0 2px 10px rgba(0,0,0,0.03);">
+                <div>
+                    {% if user.profile.avatar %}
+                        <img src="{{ user.profile.avatar.url }}" alt="Avatar" style="width: 90px; height: 90px; border-radius: 50%; object-fit: cover; border: 3px solid #f0f2f5;">
+                    {% else %}
+                        <div style="width: 90px; height: 90px; border-radius: 50%; background-color: #f0f2f5; display: flex; align-items: center; justify-content: center; font-size: 12px; color: #95a5a6; border: 2px dashed #cbd3da; text-align: center; padding: 5px;">
+                            Brak foto
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div>
+                    <h3 style="margin: 0 0 5px 0; color: #2c3e50;">{{ user.username }}</h3>
+                    <p style="margin: 0 0 10px 0; color: #7f8c8d; font-size: 0.95em;">📧 {{ user.email }}</p>
+                    <a href="{% url 'profile' %}" style="display: inline-block; padding: 6px 12px; background: #f8f9fa; color: #007bff; text-decoration: none; border-radius: 6px; font-size: 0.85em; border: 1px solid #007bff; font-weight: bold;">
+                        Edytuj profil
+                    </a>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 15px; flex: 1; min-width: 300px;">
+                <div style="background: #e7f3ff; border: 1px solid #b3d7ff; border-radius: 12px; padding: 20px; flex: 1; text-align: center; display: flex; flex-direction: column; justify-content: center;">
+                    <span style="font-size: 0.8em; color: #555; text-transform: uppercase; font-weight: bold;">Zespoły</span>
+                    <strong style="font-size: 2em; color: #007bff;">{{ user_teams.count }}</strong>
+                </div>
+                <div style="background: #fff4e5; border: 1px solid #ffe5b3; border-radius: 12px; padding: 20px; flex: 1; text-align: center; display: flex; flex-direction: column; justify-content: center;">
+                    <span style="font-size: 0.8em; color: #555; text-transform: uppercase; font-weight: bold;">Do zrobienia</span>
+                    <strong style="font-size: 2em; color: #fd7e14;">{{ my_tasks.count }}</strong>
+                </div>
+            </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1.5fr; gap: 30px;">
+            
+            <div style="background: white; border: 1px solid #e1e4e8; border-radius: 12px; padding: 25px; box-shadow: 0 2px 10px rgba(0,0,0,0.03);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h3 style="margin: 0; color: #2c3e50;">👥 Moje Zespoły</h3>
+                    <a href="{% url 'team_create' %}" style="font-size: 0.8em; text-decoration: none; color: #007bff;">+ Nowy</a>
+                </div>
+                
+                <div style="display: flex; flex-direction: column; gap: 12px;">
+                    {% for team in user_teams %}
+                        <a href="{% url 'team_detail' team.id %}" style="text-decoration: none; color: inherit; display: flex; justify-content: space-between; align-items: center; padding: 15px; background: #f8f9fa; border-radius: 10px; border: 1px solid #f1f3f5; transition: 0.2s;" onmouseover="this.style.borderColor='#007bff'; this.style.background='#fff';">
+                            <strong style="color: #2c3e50;">{{ team.name }}</strong>
+                            <span style="font-size: 0.8em; color: #95a5a6; background: #fff; padding: 4px 8px; border-radius: 6px; border: 1px solid #e1e4e8;">
+                                {{ team.members.count }} os.
+                            </span>
+                        </a>
+                    {% empty %}
+                        <p style="color: #95a5a6; font-style: italic; text-align: center; padding: 20px;">Nie należysz jeszcze do żadnego zespołu.</p>
+                    {% endfor %}
+                    <a href="{% url 'team_list' %}" style="text-align: center; font-size: 0.85em; color: #007bff; text-decoration: none; margin-top: 10px;">Pokaż wszystkie zespoły...</a>
+                </div>
+            </div>
+
+            <div style="background: white; border: 1px solid #e1e4e8; border-radius: 12px; padding: 25px; box-shadow: 0 2px 10px rgba(0,0,0,0.03);">
+                <h3 style="margin-top: 0; margin-bottom: 20px; color: #2c3e50; border-left: 4px solid #fd7e14; padding-left: 15px;">🔥 Moje pilne zadania</h3>
+                
+                <div style="display: flex; flex-direction: column; gap: 12px;">
+                    {% for task in my_tasks %}
+                        <a href="{% url 'task_detail' task.id %}" style="text-decoration: none; color: inherit; padding: 15px; border-radius: 10px; border: 1px solid #f1f3f5; background: #fffcfc; display: flex; justify-content: space-between; align-items: center; transition: 0.2s;" onmouseover="this.style.boxShadow='0 4px 12px rgba(0,0,0,0.08)';">
+                            <div style="flex: 1;">
+                                <div style="font-weight: bold; color: #2c3e50; margin-bottom: 3px;">{{ task.title }}</div>
+                                <div style="font-size: 0.75em; color: #95a5a6;">Projekt: <strong>{{ task.project.name }}</strong></div>
+                            </div>
+                            <div style="text-align: right; min-width: 100px;">
+                                <div style="font-size: 0.85em; color: #dc3545; font-weight: bold;">📅 {{ task.due_date|date:"d.m.Y" }}</div>
+                                <div style="font-size: 0.7em; color: #fff; background: {% if task.priority == 'H' %}#dc3545{% elif task.priority == 'M' %}#ffc107{% else %}#007bff{% endif %}; padding: 2px 6px; border-radius: 4px; display: inline-block; margin-top: 5px; text-transform: uppercase;">
+                                    {{ task.get_priority_display }}
+                                </div>
+                            </div>
+                        </a>
+                    {% empty %}
+                        <div style="text-align: center; padding: 40px; background: #f8f9fa; border-radius: 10px; border: 1px dashed #cbd3da;">
+                            <p style="font-size: 2em; margin: 0;">☕</p>
+                            <p style="color: #95a5a6; margin: 10px 0 0 0;">Brak pilnych zadań. Wszystko pod kontrolą!</p>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+        </div>
+
+    {% else %}
+        <div style="text-align: center; padding: 80px 20px; background: white; border-radius: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.05);">
+            <h1 style="color: #2c3e50; font-size: 2.5em; margin-bottom: 20px;">Witaj w Team Managerze!</h1>
+            <p style="color: #7f8c8d; font-size: 1.2em; max-width: 600px; margin: 0 auto 30px auto;">
+                Usprawnij pracę swojego zespołu, zarządzaj zadaniami i śledź postępy w czasie rzeczywistym.
+            </p>
+            <div style="display: flex; gap: 15px; justify-content: center;">
+                <a href="{% url 'login' %}" style="padding: 12px 30px; background: #007bff; color: white; text-decoration: none; border-radius: 8px; font-weight: bold;">Zaloguj się</a>
+                <a href="{% url 'register' %}" style="padding: 12px 30px; background: #f8f9fa; color: #2c3e50; text-decoration: none; border-radius: 8px; font-weight: bold; border: 1px solid #dee2e6;">Załóż konto</a>
+            </div>
+        </div>
+    {% endif %}
+
+    
+
+{% endblock %}

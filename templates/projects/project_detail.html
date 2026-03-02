@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block content %}
+<nav style="margin-bottom: 20px; font-size: 0.9em; background: #f8f9fa; padding: 10px 15px; border-radius: 5px; border: 1px solid #e9ecef;">
+    <a href="{% url 'dashboard' %}" style="text-decoration: none; color: #007bff;">Dashboard</a>
+    <span style="color: #6c757d; margin: 0 8px;">/</span>
+    <a href="{% url 'team_list' %}" style="text-decoration: none; color: #007bff;">Moje Zespoły</a> 
+    <span style="color: #6c757d; margin: 0 8px;">/</span>
+    <a href="{% url 'team_detail' project.team.id %}" style="text-decoration: none; color: #007bff;">{{ project.team.name }}</a> 
+    <span style="color: #6c757d; margin: 0 8px;">/</span>
+    <span style="font-weight: bold; color: #495057;">Tablica: {{ project.name }}</span>
+</nav>
+
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+    <div>
+        <h2 style="margin: 0; color: #2c3e50;">Tablica Kanban: {{ project.name }}</h2>
+        <p style="margin: 5px 0 0 0; color: #6c757d;">Zarządzaj zadaniami zespołu <strong>{{ project.team.name }}</strong></p>
+    </div>
+    <a href="{% url 'task_create' project.id %}" style="background: #28a745; color: white; padding: 12px 20px; text-decoration: none; border-radius: 6px; font-weight: bold; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: 0.3s;">
+        + Dodaj nowe zadanie
+    </a>
+</div>
+
+<div style="display: flex; gap: 20px; align-items: flex-start; overflow-x: auto; padding-bottom: 20px;">
+
+    <div style="flex: 1; min-width: 300px; background: #ebecf0; padding: 15px; border-radius: 8px; min-height: 600px; box-shadow: inset 0 0 5px rgba(0,0,0,0.05);">
+        <h3 style="text-align: center; color: #444; margin-top: 0; border-bottom: 2px solid #ddd; padding-bottom: 10px;">
+            To Do <span style="font-size: 0.7em; background: #ccc; color: #333; padding: 2px 8px; border-radius: 10px; margin-left: 5px;">{{ todo_tasks.count }}</span>
+        </h3>
+        <div style="margin-top: 15px;">
+            {% for task in todo_tasks %}
+                {% include "projects/includes/task_card.html" with task=task show_move=True %}
+            {% empty %}
+                <p style="text-align: center; color: #888; margin-top: 50px; font-style: italic;">Brak zadań do zrobienia</p>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div style="flex: 1; min-width: 300px; background: #ebecf0; padding: 15px; border-radius: 8px; min-height: 600px; box-shadow: inset 0 0 5px rgba(0,0,0,0.05);">
+        <h3 style="text-align: center; color: #444; margin-top: 0; border-bottom: 2px solid #ddd; padding-bottom: 10px;">
+            In Progress <span style="font-size: 0.7em; background: #007bff; color: white; padding: 2px 8px; border-radius: 10px; margin-left: 5px;">{{ in_progress_tasks.count }}</span>
+        </h3>
+        <div style="margin-top: 15px;">
+            {% for task in in_progress_tasks %}
+                {% include "projects/includes/task_card.html" with task=task show_move=True %}
+            {% empty %}
+                <p style="text-align: center; color: #888; margin-top: 50px; font-style: italic;">Brak zadań w toku</p>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div style="flex: 1; min-width: 300px; background: #d4edda; padding: 15px; border-radius: 8px; min-height: 600px; box-shadow: inset 0 0 5px rgba(0,0,0,0.05);">
+        <h3 style="text-align: center; color: #155724; margin-top: 0; border-bottom: 2px solid #c3e6cb; padding-bottom: 10px;">
+            Done <span style="font-size: 0.7em; background: #28a745; color: white; padding: 2px 8px; border-radius: 10px; margin-left: 5px;">{{ done_tasks.count }}</span>
+        </h3>
+        <div style="margin-top: 15px;">
+            {% for task in done_tasks %}
+                {% include "projects/includes/task_card.html" with task=task show_move=False %}
+            {% empty %}
+                <p style="text-align: center; color: #155724; margin-top: 50px; font-style: italic; opacity: 0.6;">Brak ukończonych zadań</p>
+            {% endfor %}
+        </div>
+    </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block content %}
+    {% if user.is_authenticated %}
+        <h1>Witaj, {{ user.username }}!</h1>
+        <p>To jest Twój panel dowodzenia.</p>
+        
+        <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+            
+            <div style="border: 1px solid #ccc; padding: 15px; border-radius: 8px; display: flex; align-items: center; gap: 20px; min-width: 300px; flex: 1;">
+                <div>
+                    {% if user.profile.avatar %}
+                        <img src="{{ user.profile.avatar.url }}" alt="Avatar" style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 2px solid #ddd;">
+                    {% else %}
+                        <div style="width: 80px; height: 80px; border-radius: 50%; background-color: #eee; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #888; border: 2px solid #ddd;">
+                            Brak foto
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div>
+                    <h3>Twoje dane</h3>
+                    <p><strong>{{ user.username }}</strong> ({{ user.email }})</p>
+                    <a href="{% url 'profile' %}">Edytuj profil</a>
+                </div>
+            </div>
+
+            <div style="border: 1px solid #007bff; padding: 15px; border-radius: 8px; background-color: #f0f7ff; min-width: 300px; flex: 1;">
+                <h3>Moje Zespoły</h3>
+                <p>Zarządzaj swoimi ludźmi i projektami.</p>
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                    <a href="{% url 'team_list' %}" style="background-color: #007bff; color: white; padding: 8px 12px; text-decoration: none; border-radius: 4px; text-align: center;">Pokaż listę moich zespołów</a>
+                    <a href="{% url 'team_create' %}" style="color: #007bff; text-decoration: none; font-size: 0.9em; text-align: center;">+ Stwórz nowy zespół</a>
+                </div>
+            </div>
+
+        </div>
+    {% else %}
+        <h1>Witaj w Team Managerze!</h1>
+        <p>Zarządzaj swoimi projektami i zespołem w jednym miejscu.</p>
+        <p>Aby zacząć, <a href="{% url 'login' %}">zaloguj się</a> lub <a href="{% url 'register' %}">załóż konto</a>.</p>
+    {% endif %}
+{% endblock %}
